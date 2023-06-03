@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Face Authentication</title>
+    <style>
+      body {
+        margin-top: 350px;
+        background-color: black;
+        color: white;
+        text-align: center;
+      }
+      h1 {
+        margin-top: 150px;
+      }
+      #url-input {
+        margin-top: 20px;
+        width: 500px;
+        height: 30px;
+      }
+      #submit-btn {
+        background-color: #39ff14;
+        width: 100px;
+        height: 30px;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Face Authentication</h1>
+    <form method="POST" action="/">
+      <input
+        type="text"
+        id="url-input"
+        name="url"
+        placeholder="Enter URL"
+        required
+      />
+      <br />
+      <input type="submit" id="submit-btn" value="Continue" />
+    </form>
+  </body>
+</html>

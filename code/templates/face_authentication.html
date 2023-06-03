@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Face Authentication</title>
+    <style>
+      body {
+        background-color: black;
+      }
+      #video-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 500px;
+      }
+
+      #video-feed {
+        width: 700px;
+        height: 500px;
+      }
+
+      #capture-btn {
+        background-color: #39ff14;
+        width: 100px;
+        height: 30px;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body align="center">
+    <h1 style="margin-top: 150px; color: white">Face Authentication</h1>
+    <div id="video-container">
+      <video id="video-feed" autoplay></video>
+    </div>
+    <button id="capture-btn">Capture</button>
+
+    <script>
+      // Get necessary elements
+      const video = document.getElementById("video-feed");
+      const captureBtn = document.getElementById("capture-btn");
+
+      // Check if getUserMedia is supported
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Access webcam stream
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then(function (stream) {
+            video.srcObject = stream;
+          })
+          .catch(function (error) {
+            console.log("Error accessing webcam: ", error);
+          });
+      } else {
+        console.log("getUserMedia is not supported");
+      }
+
+      // Capture button click event
+      captureBtn.addEventListener("click", function () {
+        // Create canvas element
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Draw video frame on canvas
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert canvas to base64 image data (JPEG format)
+        const imageData = canvas.toDataURL("image/jpeg", 0.8);
+
+        // Create a link element to download the captured image
+        const link = document.createElement("a");
+        link.href = imageData;
+        link.download = "captured_frame.jpg";
+        link.click();
+
+        // Save the captured image to static/img folder
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/save-image", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("Image saved successfully");
+          }
+        };
+
+        const data = JSON.stringify({ image: imageData });
+        xhr.send(data);
+      });
+    </script>
+  </body>
+</html>
